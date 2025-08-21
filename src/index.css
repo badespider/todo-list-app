@@ -1,0 +1,104 @@
+@import "tailwindcss";
+
+:root {
+  --color-border: #e2e8f0;            /* slate-200 */
+  --color-card: #ffffff;               /* white */
+  --color-foreground: #0f172a;         /* slate-900 */
+  --color-muted: #f8fafc;              /* slate-50 */
+  --color-muted-foreground: #475569;   /* slate-600 */
+  --color-selection-bg: #0f172a;       /* slate-900 */
+  --color-selection-fg: #f8fafc;       /* slate-50 */
+}
+
+/* Apply variables when data-theme is dark OR Tailwind 'dark' class is present */
+html[data-theme="dark"],
+html.dark {
+  --color-border: #334155;             /* slate-700 */
+  --color-card: #0b1220;               /* near-black */
+  --color-foreground: #f8fafc;         /* slate-50 */
+  --color-muted: #0b1220;              /* match card for unified black*/
+  --color-muted-foreground: #94a3b8;   /* slate-400 */
+  --color-selection-bg: #f8fafc;       /* invert for dark */
+  --color-selection-fg: #0b122a;       /* very dark */
+}
+
+/* Base page colors driven by variables */
+html, body, #root {
+  height: 100%;
+}
+body {
+  background-color: var(--color-muted);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  overscroll-behavior-y: contain;
+  -webkit-tap-highlight-color: transparent;
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+/* Improve readability of placeholders and selection */
+::selection {
+  background: var(--color-selection-bg);
+  color: var(--color-selection-fg);
+}
+::-moz-selection {
+  background: var(--color-selection-bg);
+  color: var(--color-selection-fg);
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-muted-foreground);
+  opacity: 0.8;
+}
+
+/* Ensure headings inherit foreground for strong contrast */
+h1, h2, h3, h4, h5, h6 { color: var(--color-foreground); }
+
+/* Global border application: apply variable-driven border color to the app root and all descendants */
+@layer base {
+  #root, #root * {
+    border-color: var(--color-border) !important;
+  }
+}
+
+/* BorderBeam animation */
+@keyframes border-beam {
+  from { offset-distance: 0%; }
+  to { offset-distance: 100%; }
+}
+
+@layer utilities {
+  .animate-border-beam { animation: border-beam var(--duration,15s) linear infinite; }
+  /* Muted foreground utility for easy adoption */
+  .text-muted { color: var(--color-muted-foreground); }
+}
+
+/* Force black text in the Edit modal and its dropdown */
+@layer base {
+  /* Make every descendant render solid black text in the edit modal */
+  [data-edit-modal],
+  [data-edit-modal] * {
+    color: #000 !important;
+  }
+  /* Inputs, textareas, selects: white background + black text */
+  [data-edit-modal] input,
+  [data-edit-modal] textarea,
+  [data-edit-modal] select {
+    background-color: #fff !important;
+    color: #000 !important;
+  }
+  /* Dropdown options */
+  [data-edit-modal] option {
+    color: #000 !important;
+    background-color: #fff !important;
+  }
+  /* Placeholders in the modal */
+  [data-edit-modal] input::placeholder,
+  [data-edit-modal] textarea::placeholder {
+    color: #334155 !important; /* slate-700 */
+    opacity: 1 !important;
+  }
+}
